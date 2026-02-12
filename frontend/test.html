@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Item Form</title>
+</head>
+<body>
+
+<h2>Add Item</h2>
+
+<form id="itemForm">
+    Name:
+    <input type="text" id="name"><br><br>
+
+    Description:
+    <input type="text" id="description"><br><br>
+
+    Price:
+    <input type="number" id="price"><br><br>
+
+    <button type="submit">Save</button>
+</form>
+
+<h3>Errors</h3>
+<pre id="errors"></pre>
+
+<h3>Result</h3>
+<pre id="result"></pre>
+
+<script>
+document.getElementById("itemForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const item = {
+        name: document.getElementById("name").value,
+        description: document.getElementById("description").value,
+        price: document.getElementById("price").value
+            ? parseInt(document.getElementById("price").value)
+            : null
+    };
+
+    const response = await fetch("http://localhost:8080/items/add", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(item)
+    });
+
+    const data = await response.json();
+
+    // clear output
+    document.getElementById("errors").textContent = "";
+    document.getElementById("result").textContent = "";
+
+    // Validation error case
+    if (!response.ok && data.errors) {
+
+        // show errors
+        document.getElementById("errors").textContent =
+            JSON.stringify(data.errors, null, 2);
+
+        // put back entered values
+        if (data.data) {
+            document.getElementById("name").value =
+                data.data.name ?? "";
+
+            document.getElementById("description").value =
+                data.data.description ?? "";
+
+            document.getElementById("price").value =
+                data.data.price ?? "";
+        }
+
+        return;
+    }
+
+    // success
+    document.getElementById("result").textContent =
+        JSON.stringify(data, null, 2);
+});
+</script>
+
+</body>
+</html>
