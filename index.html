@@ -159,7 +159,8 @@
         addForm.reset();
         fetchAllItems();
       } catch (err) {
-        let error = JSON.parse(err.message.replace(/^[0-9]+ /, ''));
+        // let error = JSON.parse(err.message.replace(/^[0-9]+ /, ''));
+        let error = JSON.parse(err.message);
         
         const nameErr = error.errors?.name ? 'Name: ' + error.errors.name : '';
         const priceErr = error.errors?.price ? 'Price: ' + error.errors.price : '';
