@@ -160,7 +160,15 @@
         fetchAllItems();
       } catch (err) {
         // let error = JSON.parse(err.message.replace(/^[0-9]+ /, ''));
-        let error = JSON.parse(err.message);
+        // let error = JSON.parse(err.message);
+
+        try {
+    // Try to parse as JSON
+    error = JSON.parse(err.message);
+} catch (e) {
+    // If it fails, just treat it as a string
+    error = err.message;
+}
         
         const nameErr = error.errors?.name ? 'Name: ' + error.errors.name : '';
         const priceErr = error.errors?.price ? 'Price: ' + error.errors.price : '';
